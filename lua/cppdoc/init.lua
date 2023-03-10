@@ -19,7 +19,7 @@ function M.setup(config)
     then
         return
     else
-        if not os.execute("cd " .. M.config.install_dir .. "/reference/en && find . -name '*.html' -printf '%P\n' > ../../index.txt")
+        if not os.execute("cd " .. M.config.install_dir .. "/reference/en && find . -name '*.html' | sed -E \"s|\\.\\/(.*)\\.\\.*(.*)|\\\\1|\" > ../../index.txt")
         then
             vim.notify("Failed to index the cppreference html book")
             return
@@ -41,7 +41,7 @@ end
 
 function M.open()
     -- but it works
-    vim.cmd("terminal RESP=$(cat "..M.config.install_dir.."/index.txt | fzf);if [ $? -ne 130 ]; then; xdg-open "..M.config.install_dir.."/reference/en/$RESP;fi")
+    vim.cmd("terminal RESP=$(cat "..M.config.install_dir.."/index.txt | fzf);if [ $? -ne 130 ]; then; xdg-open "..M.config.install_dir.."/reference/en/$RESP.html;fi")
     vim.cmd("normal! i")
 end
 
